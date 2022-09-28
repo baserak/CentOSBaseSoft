@@ -28,19 +28,19 @@ function exitfun() {
 		echo "######################################"
 		exit 0
 }
+function isRoot() {
+	if [ "$EUID" -ne 0 ]; then
+		return 1
+	fi
+}
 
 function initialCheck() {
 	if ! isRoot; then
 		echo "Sorry, you need to run this as root"
 		exitfun
 	fi
-	if ! tunAvailable; then
-		echo "TUN is not available"
-		exitfun
-	fi
 	checkOS
 }
-
 function checkOS() {
 	
 	if [[ -e /etc/system-release ]]; then
