@@ -85,10 +85,23 @@ sudo timedatectl set-timezone Asia/Almaty
 echo -e "Time zone changed to Asia-Almty"
 yum install -y epel-release
 yum install -y fail2ban
+sudo systemctl enable fail2ban
 echo "
+[DEFAULT]
+bantime = 36000
+banaction = iptables-multiport
 [sshd] 
 enabled = true
+logpath = /var/log/banned/jail.log
 " > /etc/fail2ban/jail.local
+
+echo '
+ignoreip = 127.0.0.1/8
+bantime = 600
+findtime = 600
+maxretry = 3
+' >> /etc/fail2ban/jail.conf
+
 systemctl restart fail2ban
 yum install -y lsof 
 yum install -y nano
