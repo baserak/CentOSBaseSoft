@@ -79,8 +79,9 @@ echo "######################################################################"
   echo "fail2ban-client status sshd"
 }
 function installsoft() {
-
-
+bannerInstall
+sudo timedatectl set-timezone Asia/Almaty
+echo -e"Time zone changed to Asia-Almty"
 yum install -y epel-release
 yum install -y fail2ban
 echo "
@@ -89,13 +90,11 @@ enabled = true
 " > /etc/fail2ban/jail.local
 systemctl restart fail2ban
 yum install -y lsof 
-yum install -y nano 
-}
-
-initialCheck
-bannerInstall
-installsoft
+yum install -y nano
 bannerdonne
+}
+initialCheck
+installsoft
 information
 exitfun
 
