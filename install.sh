@@ -81,7 +81,7 @@ echo "######################################################################"
 function installsoft() {
 bannerInstall
 sudo timedatectl set-timezone Asia/Almaty
-echo -e"Time zone changed to Asia-Almty"
+echo -e "Time zone changed to Asia-Almty"
 yum install -y epel-release
 yum install -y fail2ban
 echo "
