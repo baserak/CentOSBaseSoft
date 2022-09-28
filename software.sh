@@ -93,7 +93,33 @@ banaction = iptables-multiport
 [sshd] 
 enabled = true
 logpath = /var/log/banned/jail.log
+
+[vsftpd-iptables]
+
+enabled  = true
+filter   = vsftpd
+action   = iptables[name=VSFTPD, port=ftp, protocol=tcp]
+           sendmail-whois[name=VSFTPD, dest=you@example.com]
+logpath  = /var/log/secure
+maxretry = 4
+bantime  = 259200
 " > /etc/fail2ban/jail.local
+touch /etc/fail2ban/filter.d/vsftpd.conf
+echo "
+# Fail2Ban filter for vsftp
+#
+[INCLUDES]
+before = common.conf
+[Definition]
+__pam_re=\(?pam_unix(?:\(\S+\))?\)?:?
+_daemon =  vsftpd
+failregex = ^%(__prefix_line)s%(__pam_re)s\s+authentication failure; logname=\S* uid=\S* euid=\S* tty=(ftp)? ruser=\S* rhost=<HOST>(?:\s+user=.*)?\s*$
+            ^ \[pid \d+\] \[.+\] FAIL LOGIN: Client "<HOST>"\s*$
+ignoreregex =
+/var/log/vsftpd.log
+
+" >> /etc/fail2ban/filter.d/vsftpd.conf
+echo "dual_log_enable=YES" >> /etc/vsftpd/vsftpd.conf
 
 echo '
 ignoreip = 127.0.0.1/8
